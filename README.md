@@ -12,7 +12,7 @@ for the citizen and a full audit trail for officers.
 
 | | URL |
 |---|---|
-| Frontend | <https://hifazat.vercel.app> |
+| Frontend | <[https://hifazat.vercel.app](https://hifazat-ten.vercel.app/login)> |
 | Backend API docs | <https://hifazat-api.onrender.com/docs> |
 
 > Free-tier hosting: the backend sleeps after inactivity and takes ~50 s to
