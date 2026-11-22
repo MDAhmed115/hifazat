@@ -1,0 +1,307 @@
+/* frontend/src/styles.css */
+/* Hifazat — single stylesheet. Mobile-first, high contrast, one accent. */
+
+:root {
+  /* THE one accent color (orange, matches the prototype banner) */
+  --accent: #c2410c;        /* dark orange for buttons/links — AA on white */
+  --accent-strong: #ea580c; /* bright orange — banner + active states */
+  --ink: #1a1a1a;
+  --ink-soft: #444444;
+  --paper: #ffffff;
+  --paper-dim: #f6f4f1;
+  --line: #d4d0cb;
+  --danger: #b91c1c;
+  --ok: #15803d;
+  --radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper-dim);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+    "Noto Sans", sans-serif;
+  font-size: 16px;       /* minimum body size, per accessibility rule */
+  line-height: 1.5;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Permanent prototype banner ---------- */
+.proto-banner {
+  background: var(--accent-strong);
+  color: #000000;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* ---------- Layout ---------- */
+.page {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+}
+
+.page-wide {
+  max-width: 960px;
+}
+
+.app-title {
+  font-size: 1.8rem;
+  margin: 18px 0 4px;
+}
+
+.app-subtitle {
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+}
+
+h2 {
+  font-size: 1.3rem;
+  margin: 24px 0 10px;
+}
+
+/* ---------- Cards & forms ---------- */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  margin-bottom: 16px;
+}
+
+.field {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.field-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 48px;               /* large tap target */
+  font-size: 1rem;
+  padding: 10px 12px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* ---------- Buttons ---------- */
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius);
+  margin-top: 6px;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  display: inline-block;
+  min-height: 48px;
+  padding: 10px 16px;
+  background: var(--paper);
+  color: var(--accent);
+  font-weight: 600;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+}
+
+/* ---------- Role picker (login) ---------- */
+.role-picker {
+  border: none;
+  padding: 0;
+  margin: 0 0 14px;
+}
+
+.role-picker legend {
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding: 0;
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.role-btn {
+  min-height: 48px;
+  padding: 8px 6px;
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  font-weight: 600;
+  color: var(--ink);
+  text-transform: capitalize;
+}
+
+.role-btn-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+/* ---------- Messages ---------- */
+.form-error {
+  background: #fef2f2;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-weight: 600;
+}
+
+.form-hint {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.notice {
+  background: #fff7ed;
+  border: 1px solid var(--accent-strong);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+/* ---------- Top bar for logged-in pages ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 0;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 16px;
+}
+
+.topbar-user {
+  font-weight: 600;
+}
+
+.topbar-role {
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+/* ---------- Simple stat / list blocks (stub pages) ---------- */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stat-label {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+ul.plain-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul.plain-list li {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+
+/* ---------- Consent ---------- */
+.consent-box {
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.consent-box label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.consent-box input[type="checkbox"] {
+  width: 24px;
+  min-height: 24px;
+  height: 24px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+/* ---------- Small screens stay fine; tablets/desktop just widen ---------- */
+@media (min-width: 700px) {
+  .page {
+    padding-top: 28px;
+  }
+  .app-title {
+    font-size: 2.2rem;
+  }
+}

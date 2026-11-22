@@ -1,0 +1,9 @@
+﻿Integration notes
+1. app/main.py (team file, not included) needs two lines:
+   from .routers import analyze, auth_routes, mock_services
+   app.include_router(analyze.router)
+2. requirements.txt needs: python-multipart, python-dotenv, groq, pillow, pytesseract, chromadb, sentence-transformers.
+   The Tesseract program must also be installed on each machine.
+3. Put your own GROQ key in your own .env file (a key is not included in this zip).
+4. Build the RAG index with: python scripts/load_rules_docs.py
+5. Add .env, chroma_db/ and uploads/ to .gitignore.

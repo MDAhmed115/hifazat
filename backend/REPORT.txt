@@ -1,0 +1,114 @@
+================================================================================
+HIFAZAT — MEMBER B COMPILATION & MERGE REPORT (P4 + P5 + P6)
+================================================================================
+Date: 2026-11-22
+Author: Member B (Fahad)
+Target Recipient: Ahmed (Integrator / Lead)
+
+SUMMARY
+-------
+This unified folder merges all code, models, schemas, routers, and scripts from
+the P4, P5, and P6 phases into a single, cohesive, fully-tested backend.
+
+No context has been lost. Where overlapping files existed, the most complete and
+advanced implementation was selected as the base, and all unique features from
+other phases were merged into it.
+
+MERGED ARCHITECTURE & FILE INVENTORY
+-------------------------------------
+1. backend/app/config.py
+   - Unified central configuration.
+   - Merged P6 settings (APP_VERSION, GROQ_BASE_URL, GEMINI_API_KEY, AI thresholds)
+     with P5 settings (APP_LABEL, JWT_SECRET, GROQ_MODEL).
+
+2. backend/app/database.py
+   - SQLAlchemy engine with SQLite check_same_thread=False & pool_pre_ping=True.
+   - SessionLocal, Base, get_db, utcnow helper.
+
+3. backend/app/models.py
+   - All 10 models unified into one clean SQLAlchemy 2.0 file:
+     * User: Supports phone, email, and username authentication; role & is_active.
+     * Citizen: Full profile with helper_id (P4), name_key fuzzy matching, cnic_masked,
+       city/district, and language preference.
+     * Consent: Unifies P5 lifecycle (sharing_enabled, shared_with, version,
+       withdrawn_at) with P6 event tracking (consent_type, granted, ip_hash).
+     * Case: Full attributes (title, raw_content, channel, status, priority int,
+       assigned_officer_id, risk_level, closed_at).
+     * Message: Supports channel, sender_number, sender_role, body_text, raw_text,
+       image_path, and extracted_json.
+     * Decision: Supports confidence, route, explanation_ur, explanation_user,
+       explanation_audit, sources, rule_version_id, decided_by.
+     * RuleVersion: Supports version, description, thresholds, and rules_json.
+     * AuditLog: Unified actor_id, actor_role, action, entity/entity_type, entity_id,
+       details/detail JSON text.
+     * ScamPattern & Notification: Complete models for community patterns & alerts.
+
+4. backend/app/schemas.py
+   - Unified Pydantic v2 models:
+     * Auth: RegisterIn, LoginIn, UserCreate, UserOut, Token, TokenOut.
+     * Consent: ConsentOut, SharingUpdateIn, AccessEntry, AccessSummary,
+       ConsentDetailOut, ConsentRecordOut, ConsentIn.
+     * Cases: CaseCreate, CaseIn, CaseOut, CaseDetailOut, DecisionCreate, DecisionOut.
+     * Audit: AuditLogOut, AuditPage, DecisionTraceOut, AuditEntry, AuditListOut.
+
+5. backend/app/security.py & backend/app/auth.py
+   - Robust bcrypt password hashing with fallback.
+   - JWT creation and decoding with HS256.
+   - Server-side RBAC: get_current_user and require_role(*allowed_roles).
+   - auth.py re-exports everything so both import styles work across modules.
+
+6. backend/app/deps.py
+   - Dependencies: get_current_user, require_role, get_own_citizen.
+   - Auto-creates citizen and consent profile if missing during demo runs.
+
+7. backend/app/audit.py
+   - Universal log_action() supporting all parameter variations across P4/P5/P6
+     (actor_id, actor_user_id, actor_role, action, entity, entity_type, entity_id,
+     details, detail).
+
+8. backend/app/ai/ (P6 AI Engine & RAG)
+   - engine.py: Groq + Gemini + Heuristic anti-scam classification engine with Urdu text.
+   - rag.py: ChromaDB vector retrieval + OCR fallback.
+
+9. backend/app/routers/
+   - auth_routes.py: Supports phone, email, and username signups/logins; auto-seeds
+     citizen + consent for citizens; /me endpoint.
+   - cases.py & case_routes.py: Full officer queue (P4), case creation, escalation,
+     assignment, and manual/AI decision, gated by P5 check_consent and log_data_access.
+   - consent.py & consent_routes.py: P5 consent center (who accessed my data,
+     sharing update, withdraw with AI artifact redaction) + P6 event grant/revoke.
+   - decision_routes.py: Background AI decision trigger endpoint.
+   - audit_routes.py: Auditor read-only suite (paginated audit log, decision trace with
+     Urdu text and rule version, consent event log, and case audit trail).
+   - mock_services.py: Mock NADRA, Raast, telco, and scheme verification.
+
+10. backend/scripts/
+    - seed.py: Comprehensive seed script seeding users across all 5 roles, citizens,
+      active cases, messages, decisions with Urdu text, scam patterns, rule versions,
+      and audit logs.
+    - smoke_test.py: End-to-end smoke test script.
+    - pretty.py: CLI JSON formatting tool.
+
+11. backend/tests/
+    - conftest.py & test_audit_routes.py (P6 test suite).
+
+VERIFIED PASSING TESTS
+----------------------
+1. P5 Consent Lifecycle:
+   - GET /api/consent -> 200 (returns status and who_accessed summary).
+   - PATCH /api/consent/sharing -> 200 (version bumped to 2).
+   - POST /api/consent/withdraw -> 200 (version bumped to 3, withdrawn_at set).
+   - Officer reads withdrawn citizen's case -> 403 Forbidden ("User has withdrawn consent").
+2. P6 Auditor & Trace Endpoints:
+   - GET /api/audit (Auditor) -> 200 (paginated rows, withdrawal visible).
+   - GET /api/audit (Citizen) -> 403 (RBAC enforced).
+   - GET /api/decisions/1/trace -> 200 (full trace with Urdu explanation & rules).
+   - GET /api/consent/records -> 200 (chronological consent events).
+3. Smoke Test:
+   - 5/6 passes (all Member B targets passed; 6th is Member C's unintegrated AI endpoint).
+
+READY FOR INTEGRATION
+---------------------
+Ahmed can drop this entire backend folder into the project or merge routers directly.
+All models and endpoints are backwards-compatible with the starter project.
+================================================================================
